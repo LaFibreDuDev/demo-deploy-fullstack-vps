@@ -3,7 +3,7 @@ services:
     image: traefik:v3.2.3
     container_name: "traefik"
     command:
-      - "--api.insecure=true"
+      - "--api.insecure=false"
       - "--api.dashboard=true"
       - "--api.debug=true"
       - "--providers.docker=true"
@@ -18,15 +18,20 @@ services:
     ports:
       - "443:443"
       - "80:80"
-      - "8080:8080"
     volumes:
       - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     labels:
       - "traefik.http.middlewares.auth.basicauth.users=admin:$2y$05$icLSEdcsiUhE49zf1lehQ./qEa9F31gc/RtMcogEgzfIhlTb3VvVW"
-      - "traefik.http.routers.traefik-https.entrypoints: web"
+      - "traefik.http.middlewares.redirect-to-https.redirectScheme.scheme=https"
+
+      - "traefik.http.routers.traefik-http.middlewares: traefik-basicauth"
+      - "traefik.http.routers.traefik-http.entrypoints: web"
+      - "traefik.http.routers.traefik-http.middlewares=redirect-to-https"
+
       - "traefik.http.routers.traefik-https.middlewares: traefik-basicauth"
       - "traefik.http.routers.traefik-https.rule: Host(`dashboard.lafibredudev.com`)"
+      - "traefik.http.routers.traefik-https.entrypoints=websecure"
       - "traefik.http.routers.traefik-https.service: api@internal"
       - "traefik.http.routers.traefik-https.tls=true"
       - "traefik.http.routers.traefik-https.tls.certresolver=myresolver"
