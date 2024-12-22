@@ -1,4 +1,4 @@
-FROM node:12-alpine
+FROM node:20-alpine
 RUN mkdir home/node-traefik
 WORKDIR /home/node-traefik
 COPY . .
