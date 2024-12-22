@@ -1,56 +1,42 @@
 services:
   reverse-proxy:
-    image: traefik:v3.2.3
-    container_name: "traefik"
+    image: traefik:latest
+    container_name: traefik
     command:
-      - "--api.insecure=true"
       - "--api.dashboard=true"
-      - "--api.debug=true"
       - "--providers.docker=true"
-      - "--log.level=DEBUG"
-      - "--entryPoints.web.address=:80"
-      - "--entryPoints.websecure.address=:443"
-      #- "--entryPoints.traefik.address=:8080"
-      - "--providers.docker.exposedByDefault=false"
-      - "--certificatesResolvers.myresolver.acme.httpChallenge=true"
-      - "--certificatesResolvers.myresolver.acme.httpChallenge.entryPoint=web"
-      - "--certificatesResolvers.myresolver.acme.email=lafibredudev@gmail.com"
-      - "--certificatesResolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=lafibredudev@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/etc/traefik/acme.json"
     ports:
-      - "443:443"
       - "80:80"
+      - "443:443"
     volumes:
-      - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik/traefik.yml:/etc/traefik/traefik.yml"
+      - "./traefik/acme.json:/etc/traefik/acme.json"
     labels:
-      - "traefik.http.middlewares.auth.basicauth.users=admin:$2y$05$icLSEdcsiUhE49zf1lehQ./qEa9F31gc/RtMcogEgzfIhlTb3VvVW"
-      - "traefik.http.middlewares.redirect-to-https.redirectScheme.scheme=https"
-
-      # HTTP
-      - "traefik.http.routers.traefik-http.entryPoints=web"
-      - "traefik.http.routers.traefik-http.middlewares=redirect-to-https"
-      - "traefik.http.routers.traefik-http.rule=Host(`dashboard.lafibredudev.com`)"
-      - "traefik.http.routers.traefik-http.service=api@internal"
-      
-      # HTTPS
-      - "traefik.http.routers.traefik-https.entryPoints=websecure"
-      - "traefik.http.routers.traefik-https.middlewares=traefik-basicauth"
-      - "traefik.http.routers.traefik-https.rule=Host(`dashboard.lafibredudev.com`)"
-      - "traefik.http.routers.traefik-https.service=api@internal"
-      - "traefik.http.routers.traefik-https.tls=true"
-      - "traefik.http.routers.traefik-https.tls.certResolver=myresolver"
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik-dashboard.rule=Host(`board.lafibredudev.com`)"
+      - "traefik.http.routers.traefik-dashboard.entrypoints=websecure"
+      - "traefik.http.routers.traefik-dashboard.tls.certresolver=myresolver"
+      - "traefik.http.routers.traefik-dashboard.service=api@internal"
+    restart: unless-stopped
 
   node-server:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: node-server
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.node-server.rule=Host(`backend2.lafibredudev.com`)"
-      - "traefik.http.routers.node-server.entryPoints=websecure"
-      - "traefik.http.routers.node-server.tls.certResolver=myresolver"
+      - "traefik.http.routers.backend.rule=Host(`backend.lafibredudev.com`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=myresolver"
       - "traefik.http.middlewares.redirect-to-https.redirectScheme.scheme=https"
       - "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"
       - "traefik.http.routers.redirs.entryPoints=web"
       - "traefik.http.routers.redirs.middlewares=redirect-to-https"
+    environment:
+      - NODE_ENV=production
