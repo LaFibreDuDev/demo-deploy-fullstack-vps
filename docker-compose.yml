@@ -30,7 +30,7 @@ services:
       dockerfile: Dockerfile
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`backend.lafibredudev.com`)"
+      - "traefik.http.routers.backend.rule=Host(`backend2.lafibredudev.com`)"
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls.certresolver=myresolver"
       - "traefik.http.middlewares.redirect-to-https.redirectScheme.scheme=https"
