@@ -1,0 +1,13 @@
+{
+    "name": "node-traefik",
+    "version": "1.0.0",
+    "description": "Node.js servers with Docker and Traefik",
+    "main": "server.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "start": "node server.js"
+    },
+    "dependencies": {
+      "fastify": "^3.18.1"
+    }
+  }
