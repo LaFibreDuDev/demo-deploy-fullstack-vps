@@ -10,7 +10,6 @@ services:
       - "--log.level=DEBUG"
       - "--entryPoints.web.address=:80"
       - "--entryPoints.websecure.address=:443"
-      - "--entryPoints.dashboard.address=:8080"
       - "--providers.docker.exposedByDefault=false"
       - "--certificatesResolvers.myresolver.acme.httpChallenge=true"
       - "--certificatesResolvers.myresolver.acme.httpChallenge.entryPoint=web"
