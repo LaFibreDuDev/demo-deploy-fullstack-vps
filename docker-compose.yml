@@ -41,5 +41,7 @@ services:
       - "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"
       - "traefik.http.routers.redirs.entryPoints=web"
       - "traefik.http.routers.redirs.middlewares=redirect-to-https"
+    ports:
+    - "3000:3000"
     environment:
       - NODE_ENV=production
