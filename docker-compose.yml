@@ -18,7 +18,7 @@ services:
       - "./traefik/acme.json:/etc/traefik/acme.json"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik-dashboard.rule=Host(`board.lafibredudev.com`)"
+      - "traefik.http.routers.traefik-dashboard.rule=Host(`dashboard.lafibredudev.com`)"
       - "traefik.http.routers.traefik-dashboard.entrypoints=websecure"
       - "traefik.http.routers.traefik-dashboard.tls.certresolver=myresolver"
       - "traefik.http.routers.traefik-dashboard.service=api@internal"
