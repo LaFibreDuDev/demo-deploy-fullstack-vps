@@ -7,6 +7,11 @@ import { jwtDecode } from "jwt-decode";
 
 // Express app
 const app = express();
+app.use(express.json());
+
+app.get('/', (req, res) => {
+  res.send('Bienvenue sur mon application Node.js !');
+});
 
 // Client pages (for testing purposes)
 app.use("/", express.static("client"));

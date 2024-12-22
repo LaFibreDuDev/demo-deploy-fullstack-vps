@@ -1,9 +1,23 @@
 FROM node:20-alpine
-RUN mkdir -p home/node-traefik
+
+# Créer le répertoire de travail
+RUN mkdir -p /home/node-traefik
 WORKDIR /home/node-traefik
+
+# Copier uniquement les fichiers nécessaires pour installer les dépendances
 COPY package*.json ./
+
+# Installer les dépendances de production uniquement
 RUN npm install --omit=dev
+
+# Copier le reste des fichiers (à l'exception de ceux ignorés par .dockerignore)
 COPY . .
+
+# Réinitialiser la base de données (optionnel)
 RUN npm run db:reset || echo "Skipping db:reset"
+
+# Exposer le port
 EXPOSE 3000
+
+# Lancer l'application
 CMD [ "npm", "run", "start" ]
