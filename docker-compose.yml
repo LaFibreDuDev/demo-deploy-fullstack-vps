@@ -3,14 +3,14 @@ services:
     image: traefik:v3.2.3
     container_name: "traefik"
     command:
-      - "--api.insecure=false"
+      - "--api.insecure=true"
       - "--api.dashboard=true"
       - "--api.debug=true"
       - "--providers.docker=true"
       - "--log.level=DEBUG"
       - "--entryPoints.web.address=:80"
       - "--entryPoints.websecure.address=:443"
-      - "--entryPoints.traefik.address=:8080"
+      #- "--entryPoints.traefik.address=:8080"
       - "--providers.docker.exposedByDefault=false"
       - "--certificatesResolvers.myresolver.acme.httpChallenge=true"
       - "--certificatesResolvers.myresolver.acme.httpChallenge.entryPoint=web"
