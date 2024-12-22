@@ -18,6 +18,9 @@ services:
       - "./letsencrypt:/letsencrypt"
     labels:
       - "traefik.enable=true"
+      # identifiants : admin monMotDePasse (> htpasswd -nbB admin monMotDePasse)
+      - "traefik.http.middlewares.auth.basicauth.users=admin:$2y$05$icLSEdcsiUhE49zf1lehQ./qEa9F31gc/RtMcogEgzfIhlTb3VvVW"
+      - "traefik.http.middlewares.redirect-to-https.redirectScheme.scheme=https"
       - "traefik.http.routers.traefik-dashboard.rule=Host(`dashboard.lafibredudev.com`)"
       - "traefik.http.routers.traefik-dashboard.entrypoints=websecure"
       - "traefik.http.routers.traefik-dashboard.tls.certresolver=myresolver"
