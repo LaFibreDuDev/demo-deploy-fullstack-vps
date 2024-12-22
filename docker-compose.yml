@@ -32,6 +32,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: node-server
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`backend2.lafibredudev.com`)"
