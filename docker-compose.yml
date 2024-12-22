@@ -24,8 +24,8 @@ services:
       - "traefik.http.routers.traefik-dashboard.tls.certresolver=myresolver"
       - "traefik.http.routers.traefik-dashboard.service=api@internal"
       # identifiants : admin monMotDePasse (> htpasswd -nbB admin monMotDePasse)
-      - "traefik.http.middlewares.auth.basicauth.users=admin:$2y$05$hW65dSyRnY4sccQVWtMhU.Y0aBfJBUdaeEcawhoJ1M5qNPRjUVC26"
-      - "traefik.http.routers.traefik-dashboard.middlewares=auth"
+      #- "traefik.http.middlewares.auth.basicauth.users=admin:$2y$05$hW65dSyRnY4sccQVWtMhU.Y0aBfJBUdaeEcawhoJ1M5qNPRjUVC26"
+      #- "traefik.http.routers.traefik-dashboard.middlewares=auth"
     restart: unless-stopped
 
   node-server:
