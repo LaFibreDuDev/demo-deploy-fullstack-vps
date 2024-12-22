@@ -1,6 +1,7 @@
 FROM node:20-alpine
 RUN mkdir -p home/node-traefik
 WORKDIR /home/node-traefik
+COPY package*.json ./
 RUN npm install --omit=dev
 COPY . .
 RUN npm run db:reset || echo "Skipping db:reset"
