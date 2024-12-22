@@ -27,7 +27,7 @@ services:
 
       # HTTP
       - "traefik.http.routers.traefik-http.entryPoints=web"
-      - "traefik.http.routers.traefik-http.middlewares=redirect"
+      - "traefik.http.routers.traefik-http.middlewares=redirect-to-https"
       - "traefik.http.routers.traefik-http.rule=Host(`dashboard.lafibredudev.com`)"
       - "traefik.http.routers.traefik-http.service=api@internal"
       
