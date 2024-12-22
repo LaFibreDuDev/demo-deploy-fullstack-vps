@@ -25,16 +25,19 @@ services:
       - "traefik.http.middlewares.auth.basicauth.users=admin:$2y$05$icLSEdcsiUhE49zf1lehQ./qEa9F31gc/RtMcogEgzfIhlTb3VvVW"
       - "traefik.http.middlewares.redirect-to-https.redirectScheme.scheme=https"
 
-      - "traefik.http.routers.traefik-http.middlewares: traefik-basicauth"
-      - "traefik.http.routers.traefik-http.entrypoints: web"
-      - "traefik.http.routers.traefik-http.middlewares=redirect-to-https"
-
-      - "traefik.http.routers.traefik-https.middlewares: traefik-basicauth"
-      - "traefik.http.routers.traefik-https.rule: Host(`dashboard.lafibredudev.com`)"
-      - "traefik.http.routers.traefik-https.entrypoints=websecure"
-      - "traefik.http.routers.traefik-https.service: api@internal"
+      # HTTP
+      - "traefik.http.routers.traefik-http.entryPoints=web"
+      - "traefik.http.routers.traefik-http.middlewares=redirect"
+      - "traefik.http.routers.traefik-http.rule=Host(`dashboard.lafibredudev.com`)"
+      - "traefik.http.routers.traefik-http.service=api@internal"
+      
+      # HTTPS
+      - "traefik.http.routers.traefik-https.entryPoints=websecure"
+      - "traefik.http.routers.traefik-https.middlewares=traefik-basicauth"
+      - "traefik.http.routers.traefik-https.rule=Host(`dashboard.lafibredudev.com`)"
+      - "traefik.http.routers.traefik-https.service=api@internal"
       - "traefik.http.routers.traefik-https.tls=true"
-      - "traefik.http.routers.traefik-https.tls.certresolver=myresolver"
+      - "traefik.http.routers.traefik-https.tls.certResolver=myresolver"
 
   node-server:
     build:
