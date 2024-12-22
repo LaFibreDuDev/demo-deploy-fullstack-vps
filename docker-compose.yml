@@ -28,6 +28,8 @@ services:
       - "traefik.http.routers.traefik-https.middlewares: traefik-basicauth"
       - "traefik.http.routers.traefik-https.rule: Host(`dashboard.lafibredudev.com`)"
       - "traefik.http.routers.traefik-https.service: api@internal"
+      - "traefik.http.routers.traefik-https.tls=true"
+      - "traefik.http.routers.traefik-https.tls.certresolver=myresolver"
 
   node-server:
     build:
