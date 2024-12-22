@@ -1,21 +1,21 @@
-version: "3.3"
 services:
   reverse-proxy:
-    image: traefik:v2.4
+    image: traefik:v3.2.3
     container_name: "traefik"
     command:
       - "--api.insecure=true"
       - "--api.dashboard=true"
       - "--api.debug=true"
       - "--providers.docker=true"
-      - "--log.LEVEL=DEBUG"
+      - "--log.level=DEBUG"
       - "--entryPoints.web.address=:80"
       - "--entryPoints.websecure.address=:443"
-      - "--providers.docker.exposedbydefault=false"
-      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
-      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.myresolver.acme.email=lafibredudev@gmail.com"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--entryPoints.dashboard.address=:8080"
+      - "--providers.docker.exposedByDefault=false"
+      - "--certificatesResolvers.myresolver.acme.httpChallenge=true"
+      - "--certificatesResolvers.myresolver.acme.httpChallenge.entryPoint=web"
+      - "--certificatesResolvers.myresolver.acme.email=lafibredudev@gmail.com"
+      - "--certificatesResolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
       - "443:443"
       - "80:80"
@@ -23,6 +23,8 @@ services:
     volumes:
       - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+      - "traefik.http.middlewares.auth.basicauth.users=admin:$2y$05$icLSEdcsiUhE49zf1lehQ./qEa9F31gc/RtMcogEgzfIhlTb3VvVW"
 
   node-server:
     build:
@@ -32,9 +34,9 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.node-server.rule=Host(`backend2.lafibredudev.com`)"
-      - "traefik.http.routers.node-server.entrypoints=websecure"
-      - "traefik.http.routers.node-server.tls.certresolver=myresolver"
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.node-server.entryPoints=websecure"
+      - "traefik.http.routers.node-server.tls.certResolver=myresolver"
+      - "traefik.http.middlewares.redirect-to-https.redirectScheme.scheme=https"
       - "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"
-      - "traefik.http.routers.redirs.entrypoints=web"
+      - "traefik.http.routers.redirs.entryPoints=web"
       - "traefik.http.routers.redirs.middlewares=redirect-to-https"
