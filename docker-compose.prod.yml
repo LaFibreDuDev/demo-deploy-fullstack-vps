@@ -23,10 +23,18 @@ services:
       - "traefik.http.routers.traefik-dashboard.entrypoints=websecure"
       - "traefik.http.routers.traefik-dashboard.tls.certresolver=myresolver"
       - "traefik.http.routers.traefik-dashboard.service=api@internal"
+      - "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"
+      - "traefik.http.routers.redirs.entryPoints=web"
+      - "traefik.http.routers.redirs.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectScheme.scheme=https"
+      - "traefik.http.services.frontend.loadbalancer.server.port=80"
+      - "traefik.http.services.backend.loadbalancer.server.port=3000"
       # identifiants : admin monMotDePasse (> htpasswd -nbB admin monMotDePasse)
       #- "traefik.http.middlewares.auth.basicauth.users=admin:$2y$05$hW65dSyRnY4sccQVWtMhU.Y0aBfJBUdaeEcawhoJ1M5qNPRjUVC26"
       #- "traefik.http.routers.traefik-dashboard.middlewares=auth"
     restart: unless-stopped
+
+  # "traefik.http.services.<ton-nom-de-service>.loadbalancer.server.port: 8888"
 
   frontend:
     build:
@@ -39,11 +47,6 @@ services:
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls.certresolver=myresolver"
       - "traefik.http.middlewares.redirect-to-https.redirectScheme.scheme=https"
-      - "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"
-      - "traefik.http.routers.redirs.entryPoints=web"
-      - "traefik.http.routers.redirs.middlewares=redirect-to-https"
-    ports:
-      - "5173:80"
     environment:
       - VITE_BACKEND_BASE_URL=https://backend2.lafibredudev.com
   backend:
@@ -56,12 +59,6 @@ services:
       - "traefik.http.routers.backend.rule=Host(`backend2.lafibredudev.com`)"
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls.certresolver=myresolver"
-      - "traefik.http.middlewares.redirect-to-https.redirectScheme.scheme=https"
-      - "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"
-      - "traefik.http.routers.redirs.entryPoints=web"
-      - "traefik.http.routers.redirs.middlewares=redirect-to-https"
-    ports:
-      - "3000:3000"
     environment:
       - NODE_ENV=production
       - DATABASE_DBNAME=devdb
