@@ -5,8 +5,12 @@ const server = {
 };
 
 const database = {
-  dialect: process.env.DATABASE_DIALECT || "sqlite",
-  storage: process.env.DATABASE_STORAGE || "database.sqlite"
+  dialect: process.env.DATABASE_DIALECT || "postgres",
+  database: process.env.DATABASE_DBNAME || 'mydb',
+  user: process.env.DATABASE_USER || 'myuser',
+  password: process.env.DATABASE_PASSWORD || 'mypass',
+  host: process.env.DATABASE_HOST || 'localhost',
+  port: process.env.DATABASE_PORT || 5432,
 };
 
 const auth = {

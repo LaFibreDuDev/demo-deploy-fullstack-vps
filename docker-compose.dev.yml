@@ -1,0 +1,39 @@
+services:
+  frontend:
+    image: node:20-alpine
+    container_name: frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "5173:5173"
+    command: ["/bin/sh", "-c", "npm run dev -- --host"]
+    environment:
+      - VITE_BACKEND_BASE_URL=http://localhost:3000
+  backend:
+    image: node:20-alpine
+    container_name: backend
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    ports:
+      - "3000:3000"
+    command: ["/bin/sh", "-c", "npm run db:reset && npm run start"]
+    environment:
+      - NODE_ENV=development
+      - DATABASE_DBNAME=devdb
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=password
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=devdb
+    ports:
+      - "5434:5432"

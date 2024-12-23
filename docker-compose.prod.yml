@@ -28,11 +28,29 @@ services:
       #- "traefik.http.routers.traefik-dashboard.middlewares=auth"
     restart: unless-stopped
 
-  node-server:
+  frontend:
     build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: node-server
+      context: frontend
+      dockerfile: Dockerfile.prod
+    container_name: frontend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`frontend2.lafibredudev.com`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=myresolver"
+      - "traefik.http.middlewares.redirect-to-https.redirectScheme.scheme=https"
+      - "traefik.http.routers.redirs.rule=hostregexp(`{host:.+}`)"
+      - "traefik.http.routers.redirs.entryPoints=web"
+      - "traefik.http.routers.redirs.middlewares=redirect-to-https"
+    ports:
+      - "80:80"
+    environment:
+      - VITE_BACKEND_BASE_URL=https://backend2.lafibredudev.com
+  backend:
+    build:
+      context: backend
+      dockerfile: Dockerfile.prod
+    container_name: backend
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`backend2.lafibredudev.com`)"
@@ -46,3 +64,17 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
+      - DATABASE_DBNAME=devdb
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=password
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=devdb
