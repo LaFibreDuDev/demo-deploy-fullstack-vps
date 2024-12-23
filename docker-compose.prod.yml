@@ -37,7 +37,7 @@ services:
       context: frontend
       dockerfile: Dockerfile.prod
       args:
-        - VITE_BACKEND_BASE_URL=https://backend2.lafibredudev.com
+        VITE_BACKEND_BASE_URL: https://backend2.lafibredudev.com
     container_name: frontend
     labels:
       - "traefik.enable=true"
