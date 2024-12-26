@@ -44,7 +44,6 @@ services:
       - "traefik.http.routers.frontend.rule=Host(`frontend2.lafibredudev.com`)"
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls.certresolver=myresolver"
-      - "traefik.http.middlewares.redirect-to-https.redirectScheme.scheme=https"
   backend:
     build:
       context: backend
