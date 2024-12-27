@@ -38,15 +38,14 @@ services:
     build:
       context: frontend
       dockerfile: Dockerfile.prod
+      args:
+        VITE_BACKEND_BASE_URL: https://backend2.lafibredudev.com
     container_name: frontend
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`frontend2.lafibredudev.com`)"
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls.certresolver=myresolver"
-    environment:
-      - NODE_ENV=production
-      - VITE_BACKEND_BASE_URL=https://backend2.lafibredudev.com
   backend:
     build:
       context: backend
