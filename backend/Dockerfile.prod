@@ -14,7 +14,7 @@ RUN npm install --omit=dev
 COPY . .
 
 # Réinitialiser la base de données (optionnel)
-RUN npm run db:reset || echo "Skipping db:reset"
+#RUN npm run db:reset || echo "Skipping db:reset"
 
 # Exposer le port
 EXPOSE 3000
