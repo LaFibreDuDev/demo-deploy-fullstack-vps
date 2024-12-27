@@ -63,6 +63,7 @@ services:
       - DATABASE_PASSWORD=password
       - DATABASE_HOST=postgres
       - DATABASE_PORT=5432
+      - FRONTEND_BASE_URL=https://frontend2.lafibredudev.com
     depends_on:
       - postgres
   postgres:

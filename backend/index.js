@@ -22,7 +22,11 @@ app.use(express.json()); // application/json
 
 // cors
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+  if(process.env.NODE_ENV !== "production") {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+  } else {
+    res.header('Access-Control-Allow-Origin', process.env.FRONTEND_BASE_URL);
+  }
   res.header('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization');
   res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
   res.header('Access-Control-Allow-Credentials', true);
