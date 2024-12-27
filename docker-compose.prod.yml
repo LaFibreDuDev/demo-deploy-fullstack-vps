@@ -64,7 +64,7 @@ services:
       - DATABASE_HOST=postgres
       - DATABASE_PORT=5432
       - FRONTEND_BASE_URL=https://frontend2.lafibredudev.com
-    command: ["sh", "-c", "npm run db:reset"]
+    entrypoint: ["sh", "-c", "npm run db:reset"]
     depends_on:
       - postgres
   postgres:
