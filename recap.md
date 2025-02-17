@@ -38,8 +38,18 @@ git clone <notre_repo>
 cd <repo>/scripts/server
 # on colle le contenu du script
 chmod a+x 02-docker.sh
-# on exécute le script et on suit les étapes
-./02-docker.sh
+# on exécute le script et on suit les étapes (il faut le lancer en sudo)
+sudo bash 02-docker.sh
+```
+
+- On permet d'exécuter docker sans la commande sudo
+
+```sh
+sudo groupadd -f docker
+sudo chown root:docker /var/run/docker.sock
+sudo usermod -a -G docker "$(whoami)"
+newgrp docker
+sudo systemctl restart docker
 ```
 
 - On lance enfin pour terminer le fichier docker-compose
